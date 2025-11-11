@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import { Calculator, TrendingUp, CreditCard, Percent, Heart, Sigma, Zap, ArrowLeft } from "lucide-react"
+import { Calculator, TrendingUp, CreditCard, Percent, Heart, Sigma, Zap, ArrowLeft, Search, X } from "lucide-react"
 import Header from "@/components/header"
 import BasicCalculator from "@/components/basic-calculator"
 import UnitConverter from "@/components/unit-converter"
@@ -190,12 +190,26 @@ import FinanceCalculator from "@/components/finance-calculator"
 import RepaymentCalculator from "@/components/repayment-calculator"
 import DebtConsolidationCalculator from "@/components/debt-consolidation-calculator"
 
+// New imports
+import MortgagePayoffCalculator from "@/components/mortgage-payoff-calculator"
+import PercentOffCalculator from "@/components/percent-off-calculator"
+import HealthyWeightCalculator from "@/components/healthy-weight-calculator"
+import BodyTypeCalculator from "@/components/body-type-calculator"
+import MatrixCalculator from "@/components/matrix-calculator"
+import ScientificNotationCalculator from "@/components/scientific-notation-calculator"
+import BigNumberCalculator from "@/components/big-number-calculator"
+import CommonFactorCalculator from "@/components/common-factor-calculator"
+import OverweightCalculator from "@/components/overweight-calculator"
+import AnorexicBMICalculator from "@/components/anorexic-bmi-calculator"
+import WeightWatcherPointsCalculator from "@/components/weight-watcher-points-calculator"
+
 import AdSenseResponsiveAd from "@/components/adsense-responsive-ad"
 
 export default function Page() {
   const [activeCategory, setActiveCategory] = useState("basic")
   const [activeTab, setActiveTab] = useState("basic")
   const [view, setView] = useState<"grid" | "calculator">("grid")
+  const [searchQuery, setSearchQuery] = useState("")
 
   const categories = [
     {
@@ -341,6 +355,12 @@ export default function Page() {
           name: "Repayment Calculator",
           description: "General loan repayment planning",
           component: RepaymentCalculator,
+        },
+        {
+          id: "mortgage-payoff",
+          name: "Mortgage Payoff Calculator",
+          description: "Calculate early mortgage payoff",
+          component: MortgagePayoffCalculator,
         },
       ],
     },
@@ -504,6 +524,12 @@ export default function Page() {
           name: "Commission Calculator",
           description: "Calculate sales commission earnings",
           component: CommissionCalculator,
+        },
+        {
+          id: "percent-off",
+          name: "Percent Off Calculator",
+          description: "Calculate discounts and sale prices",
+          component: PercentOffCalculator,
         },
       ],
     },
@@ -741,6 +767,36 @@ export default function Page() {
           name: "Pregnancy Weight Gain",
           description: "Track healthy weight gain",
           component: PregnancyWeightGainCalculator,
+        },
+        {
+          id: "healthy-weight",
+          name: "Healthy Weight Calculator",
+          description: "Calculate ideal weight range",
+          component: HealthyWeightCalculator,
+        },
+        {
+          id: "body-type",
+          name: "Body Type Calculator",
+          description: "Determine your body shape and type",
+          component: BodyTypeCalculator,
+        },
+        {
+          id: "overweight",
+          name: "Overweight Calculator",
+          description: "Assess overweight status and health risks",
+          component: OverweightCalculator,
+        },
+        {
+          id: "anorexic-bmi",
+          name: "Anorexic BMI Calculator",
+          description: "Screen for underweight conditions",
+          component: AnorexicBMICalculator,
+        },
+        {
+          id: "weight-watcher",
+          name: "Weight Watcher Points",
+          description: "Calculate daily points budget",
+          component: WeightWatcherPointsCalculator,
         },
         {
           id: "army-body-fat",
@@ -988,6 +1044,30 @@ export default function Page() {
           name: "P-Value Calculator",
           description: "Calculate statistical p-values",
           component: PValueCalculator,
+        },
+        {
+          id: "matrix",
+          name: "Matrix Calculator",
+          description: "2x2 matrix operations",
+          component: MatrixCalculator,
+        },
+        {
+          id: "scientific-notation",
+          name: "Scientific Notation",
+          description: "Convert to/from scientific notation",
+          component: ScientificNotationCalculator,
+        },
+        {
+          id: "big-number",
+          name: "Big Number Calculator",
+          description: "Calculate with extremely large numbers",
+          component: BigNumberCalculator,
+        },
+        {
+          id: "common-factor",
+          name: "Common Factor Calculator",
+          description: "Find common factors and GCF",
+          component: CommonFactorCalculator,
         },
       ],
     },
@@ -1358,6 +1438,32 @@ export default function Page() {
   const currentCalculator = currentCategory?.calculators.find((calc) => calc.id === activeTab)
   const CurrentComponent = currentCalculator?.component
 
+  const getFilteredCalculators = () => {
+    if (!searchQuery.trim()) return null
+
+    const query = searchQuery.toLowerCase()
+    const results: Array<{
+      calculator: any
+      category: any
+    }> = []
+
+    categories.forEach((category) => {
+      category.calculators.forEach((calculator) => {
+        if (
+          calculator.name.toLowerCase().includes(query) ||
+          calculator.description.toLowerCase().includes(query) ||
+          category.name.toLowerCase().includes(query)
+        ) {
+          results.push({ calculator, category })
+        }
+      })
+    })
+
+    return results
+  }
+
+  const searchResults = getFilteredCalculators()
+
   const handleBackToGrid = () => {
     setView("grid")
   }
@@ -1366,6 +1472,11 @@ export default function Page() {
     setActiveCategory(categoryId)
     setActiveTab(calculatorId)
     setView("calculator")
+    setSearchQuery("")
+  }
+
+  const clearSearch = () => {
+    setSearchQuery("")
   }
 
   return (
@@ -1381,7 +1492,7 @@ export default function Page() {
             </span>
           </h1>
           <p className="text-xl sm:text-2xl text-muted-foreground max-w-3xl mx-auto text-balance mb-8 leading-relaxed">
-            180+ professional calculators for financial planning, health tracking, math problems, and everyday utilities
+            190+ professional calculators for financial planning, health tracking, math problems, and everyday utilities
           </p>
           <div className="flex flex-wrap gap-3 justify-center items-center text-sm text-muted-foreground">
             <span className="flex items-center gap-2 px-4 py-2 bg-card rounded-full border border-border shadow-sm">
@@ -1457,55 +1568,130 @@ export default function Page() {
               <AdSenseResponsiveAd slot="1234567890" />
             </div>
 
-            <div className="mb-12 flex flex-wrap gap-3 justify-center">
-              {categories.map((category) => {
-                const Icon = category.icon
-                const isActive = activeCategory === category.id
-                return (
+            <div className="max-w-2xl mx-auto mb-12">
+              <div className="relative">
+                <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
+                <input
+                  type="text"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  placeholder="Search calculators... (e.g., 'loan', 'BMI', 'percentage')"
+                  className="w-full pl-12 pr-12 py-4 rounded-xl bg-card border-2 border-border focus:border-primary outline-none text-foreground placeholder:text-muted-foreground transition-all duration-200 shadow-sm focus:shadow-md"
+                />
+                {searchQuery && (
                   <button
-                    key={category.id}
-                    onClick={() => {
-                      setActiveCategory(category.id)
-                      setActiveTab(category.calculators[0].id)
-                    }}
-                    className={`group flex items-center gap-2 px-6 py-3 rounded-xl font-medium transition-all duration-300 ${
-                      isActive
-                        ? "bg-gradient-to-r from-primary to-accent text-primary-foreground shadow-lg shadow-primary/25 scale-105"
-                        : "bg-card border border-border text-foreground hover:bg-secondary hover:border-primary/50 hover:scale-105 shadow-sm"
-                    }`}
+                    onClick={clearSearch}
+                    className="absolute right-4 top-1/2 -translate-y-1/2 w-8 h-8 rounded-lg hover:bg-secondary flex items-center justify-center transition-colors duration-200"
+                    aria-label="Clear search"
                   >
-                    <Icon
-                      className={`w-5 h-5 transition-transform duration-300 ${isActive ? "" : "group-hover:rotate-12"}`}
-                    />
-                    <span>{category.name}</span>
+                    <X className="w-5 h-5 text-muted-foreground" />
                   </button>
-                )
-              })}
+                )}
+              </div>
+              {searchQuery && searchResults && (
+                <p className="text-sm text-muted-foreground mt-3 text-center">
+                  Found {searchResults.length} calculator{searchResults.length !== 1 ? "s" : ""}
+                </p>
+              )}
             </div>
 
-            {currentCategory && (
-              <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
-                {currentCategory.calculators.map((calc, index) => (
-                  <button
-                    key={calc.id}
-                    onClick={() => handleSelectCalculator(currentCategory.id, calc.id)}
-                    className="group bg-card rounded-2xl p-6 border border-border hover:border-primary/50 hover:shadow-xl transition-all duration-300 hover:scale-[1.02] animate-scale-in"
-                    style={{ animationDelay: `${index * 30}ms` }}
-                  >
-                    <div className="flex items-start justify-between mb-3">
-                      <h3 className="font-bold text-foreground text-lg leading-tight flex-1">{calc.name}</h3>
-                      <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-primary/10 to-accent/10 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-                        <Calculator className="w-4 h-4 text-primary" />
-                      </div>
-                    </div>
-                    <p className="text-sm text-muted-foreground leading-relaxed mb-4">{calc.description}</p>
-                    <div className="flex items-center gap-2 text-primary text-sm font-semibold">
-                      <span>Open Calculator</span>
-                      <span className="text-lg group-hover:translate-x-1 transition-transform duration-300">→</span>
-                    </div>
-                  </button>
-                ))}
+            {searchQuery && searchResults ? (
+              <div className="mb-12">
+                {searchResults.length > 0 ? (
+                  <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {searchResults.map(({ calculator, category }, index) => (
+                      <button
+                        key={`${category.id}-${calculator.id}`}
+                        onClick={() => handleSelectCalculator(category.id, calculator.id)}
+                        className="group bg-card rounded-2xl p-6 border border-border hover:border-primary/50 hover:shadow-xl transition-all duration-300 hover:scale-[1.02] animate-scale-in"
+                        style={{ animationDelay: `${index * 30}ms` }}
+                      >
+                        <div className="flex items-start justify-between mb-3">
+                          <div className="flex-1">
+                            <h3 className="font-bold text-foreground text-lg leading-tight mb-1">{calculator.name}</h3>
+                            <p className="text-xs text-muted-foreground font-medium">{category.name}</p>
+                          </div>
+                          <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-primary/10 to-accent/10 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                            <Calculator className="w-4 h-4 text-primary" />
+                          </div>
+                        </div>
+                        <p className="text-sm text-muted-foreground leading-relaxed mb-4">{calculator.description}</p>
+                        <div className="flex items-center gap-2 text-primary text-sm font-semibold">
+                          <span>Open Calculator</span>
+                          <span className="text-lg group-hover:translate-x-1 transition-transform duration-300">→</span>
+                        </div>
+                      </button>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="text-center py-16">
+                    <div className="text-6xl mb-4">🔍</div>
+                    <h3 className="text-xl font-semibold text-foreground mb-2">No calculators found</h3>
+                    <p className="text-muted-foreground mb-6">
+                      Try searching with different keywords like "loan", "BMI", "tax", or "percentage"
+                    </p>
+                    <button
+                      onClick={clearSearch}
+                      className="px-6 py-3 bg-primary text-primary-foreground rounded-xl hover:bg-primary/90 transition-colors duration-200 font-medium"
+                    >
+                      Clear Search
+                    </button>
+                  </div>
+                )}
               </div>
+            ) : (
+              <>
+                <div className="mb-12 flex flex-wrap gap-3 justify-center">
+                  {categories.map((category) => {
+                    const Icon = category.icon
+                    const isActive = activeCategory === category.id
+                    return (
+                      <button
+                        key={category.id}
+                        onClick={() => {
+                          setActiveCategory(category.id)
+                          setActiveTab(category.calculators[0].id)
+                        }}
+                        className={`group flex items-center gap-2 px-6 py-3 rounded-xl font-medium transition-all duration-300 ${
+                          isActive
+                            ? "bg-gradient-to-r from-primary to-accent text-primary-foreground shadow-lg shadow-primary/25 scale-105"
+                            : "bg-card border border-border text-foreground hover:bg-secondary hover:border-primary/50 hover:scale-105 shadow-sm"
+                        }`}
+                      >
+                        <Icon
+                          className={`w-5 h-5 transition-transform duration-300 ${isActive ? "" : "group-hover:rotate-12"}`}
+                        />
+                        <span>{category.name}</span>
+                      </button>
+                    )
+                  })}
+                </div>
+
+                {currentCategory && (
+                  <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
+                    {currentCategory.calculators.map((calc, index) => (
+                      <button
+                        key={calc.id}
+                        onClick={() => handleSelectCalculator(currentCategory.id, calc.id)}
+                        className="group bg-card rounded-2xl p-6 border border-border hover:border-primary/50 hover:shadow-xl transition-all duration-300 hover:scale-[1.02] animate-scale-in"
+                        style={{ animationDelay: `${index * 30}ms` }}
+                      >
+                        <div className="flex items-start justify-between mb-3">
+                          <h3 className="font-bold text-foreground text-lg leading-tight flex-1">{calc.name}</h3>
+                          <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-primary/10 to-accent/10 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                            <Calculator className="w-4 h-4 text-primary" />
+                          </div>
+                        </div>
+                        <p className="text-sm text-muted-foreground leading-relaxed mb-4">{calc.description}</p>
+                        <div className="flex items-center gap-2 text-primary text-sm font-semibold">
+                          <span>Open Calculator</span>
+                          <span className="text-lg group-hover:translate-x-1 transition-transform duration-300">→</span>
+                        </div>
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </>
             )}
           </>
         )}
@@ -1513,7 +1699,7 @@ export default function Page() {
         {/* Hero Section with SEO content */}
         <div className="text-center mb-12">
           <h1 className="text-4xl sm:text-5xl font-bold text-foreground mb-4 text-balance">
-            Free Online Calculators - 180+ Tools
+            Free Online Calculators - 190+ Tools
           </h1>
           <p className="text-lg text-muted-foreground max-w-3xl mx-auto text-balance mb-6">
             Comprehensive calculator suite for financial planning, investments, loans, mortgages, health, fitness, BMI,
@@ -1538,7 +1724,7 @@ export default function Page() {
           <div className="grid md:grid-cols-3 gap-8">
             <div className="group text-center p-8 rounded-2xl bg-gradient-to-br from-card to-secondary border border-border hover:border-primary/50 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105">
               <div className="text-6xl mb-6 group-hover:scale-110 transition-transform duration-300">🧮</div>
-              <h3 className="font-bold text-foreground mb-3 text-xl">170+ Free Calculators</h3>
+              <h3 className="font-bold text-foreground mb-3 text-xl">190+ Free Calculators</h3>
               <p className="text-muted-foreground text-sm leading-relaxed">
                 Financial planning, investment analysis, health tracking, fitness goals, math homework, and everyday
                 calculations all in one place
@@ -1670,7 +1856,7 @@ export default function Page() {
             <div className="bg-card p-6 rounded-lg border border-border">
               <h3 className="font-semibold text-foreground mb-2">Are these calculators really free?</h3>
               <p className="text-sm text-muted-foreground leading-relaxed">
-                Yes! All 180+ calculators are completely free to use with no hidden fees, subscriptions, or sign-up
+                Yes! All 190+ calculators are completely free to use with no hidden fees, subscriptions, or sign-up
                 requirements. We're supported by advertising.
               </p>
             </div>
