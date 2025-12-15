@@ -1,12 +1,16 @@
 import type React from "react"
 import type { Metadata } from "next"
-import { Geist, Geist_Mono } from "next/font/google"
+
 import { Analytics } from "@vercel/analytics/next"
 import "./globals.css"
 import Footer from "@/components/footer"
 
-const _geist = Geist({ subsets: ["latin"] })
-const _geistMono = Geist_Mono({ subsets: ["latin"] })
+import { Geist_Mono, Dancing_Script as V0_Font_Dancing_Script, Geist_Mono as V0_Font_Geist_Mono, Bree_Serif as V0_Font_Bree_Serif } from 'next/font/google'
+
+// Initialize fonts
+const _dancingScript = V0_Font_Dancing_Script({ subsets: ['latin'], weight: ["400","500","600","700"] })
+const _geistMono = V0_Font_Geist_Mono({ subsets: ['latin'], weight: ["100","200","300","400","500","600","700","800","900"] })
+const _breeSerif = V0_Font_Bree_Serif({ subsets: ['latin'], weight: ["400"] })
 
 export const metadata: Metadata = {
   title: "Free Online Calculators - 127+ Financial, Math, Health & Utility Tools",
@@ -112,7 +116,7 @@ export default function RootLayout({
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
       </head>
-      <body className={`font-sans antialiased`}>
+      <body className={`font-serif antialiased`}>
         {children}
         <Footer />
         <Analytics />

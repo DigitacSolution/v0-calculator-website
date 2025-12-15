@@ -38,7 +38,7 @@
   --chart-4: oklch(0.55 0.16 30);
   --chart-5: oklch(0.52 0.15 285);
 
-  --radius: 0.75rem;
+  --radius: 1.25rem;
 
   --sidebar: oklch(0.99 0.002 240);
   --sidebar-foreground: oklch(0.12 0.015 250);
@@ -92,7 +92,7 @@
 }
 
 @theme inline {
-  --font-sans: "Geist", "Geist Fallback";
+  --font-sans: 'Dancing Script', 'Dancing Script Fallback';
   --font-mono: "Geist Mono", "Geist Mono Fallback";
   --color-background: var(--background);
   --color-foreground: var(--foreground);
@@ -130,7 +130,7 @@
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-ring: var(--sidebar-ring);
-}
+  --font-serif: 'Bree Serif', 'Bree Serif Fallback';}
 
 @layer base {
   * {
